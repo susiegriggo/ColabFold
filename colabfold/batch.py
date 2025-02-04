@@ -1310,9 +1310,9 @@ def run(
             tf.config.set_visible_devices([], 'GPU')
 
     from alphafold.notebooks.notebook_utils import get_pae_json
-    from colabfold.alphafold.models import load_models_and_params
-    from colabfold.colabfold import plot_paes, plot_plddts
-    from colabfold.plot import plot_msa_v2
+    from alphafold.models import load_models_and_params
+    from colabfold import plot_paes, plot_plddts
+    from plot import plot_msa_v2
 
     data_dir = Path(data_dir)
     result_dir = Path(result_dir)
@@ -1528,6 +1528,7 @@ def run(
         # Save representations only if the flag is set
         if save_representations_only:
             result_files = []
+            print(feature_dict, flush=True) 
             if save_single_representations:
                 np.save(result_dir.joinpath(f"{jobname}_single_repr.npy"), feature_dict["representations"]["single"])
             if save_pair_representations:
@@ -2024,6 +2025,13 @@ def main():
         default="length",
         choices=["none", "length", "random"],
     )
+    output_group.add_argument(
+        "--save-representations-only",
+        default=False,
+        action="store_true",
+        help="Save only the single and pair representation embeddings of all models and skip structure prediction.",
+    )
+
 
     adv_group = parser.add_argument_group(
         "Advanced arguments", ""
