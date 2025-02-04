@@ -54,9 +54,9 @@ from alphafold.data import (
     templates,
 )
 from alphafold.data.tools import hhsearch
-from colabfold.citations import write_bibtex
-from colabfold.download import default_data_dir, download_alphafold_params
-from colabfold.utils import (
+from citations import write_bibtex
+from download import default_data_dir, download_alphafold_params
+from utils import (
     ACCEPT_DEFAULT_TERMS,
     DEFAULT_API_SERVER,
     NO_GPU_FOUND,
@@ -66,8 +66,8 @@ from colabfold.utils import (
     setup_logging,
     CFMMCIFIO,
 )
-from colabfold.relax import relax_me
-from colabfold.alphafold import extra_ptm
+from relax import relax_me
+from alphafold import extra_ptm
 
 from Bio.PDB import MMCIFParser, PDBParser, MMCIF2Dict
 from Bio.PDB.PDBIO import Select
@@ -2140,7 +2140,7 @@ def main():
         jobname_prefix=args.jobname_prefix,
         save_all=args.save_all,
         save_recycles=args.save_recycles,
-        calc_extra_ptm=args.calc_extra_ptm,
+        #calc_extra_ptm=args.calc_extra_ptm,
         use_probs_extra=use_probs_extra,
         save_representations_only=args.save_representations_only,  # Pass the new argument
     )
