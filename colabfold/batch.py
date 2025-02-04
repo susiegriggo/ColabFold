@@ -349,6 +349,7 @@ def predict_structure(
     save_recycles: bool = False,
     calc_extra_ptm: bool = False,
     use_probs_extra: bool = True,
+    save_representations_only: bool = False,  # New argument
 ):
     """Predicts structure using AlphaFold for the given sequence."""
     mean_scores = []
@@ -428,6 +429,15 @@ def predict_structure(
                 random_seed=seed,
                 return_representations=return_representations,
                 callback=callback)
+            
+            # save representations only if the flag is set
+            if save_representations_only:
+                if save_single_representations:
+                    np.save(files.get("single_repr","npy"),result["representations"]["single"])
+                if save_pair_representations:
+                    np.save(files.get("pair_repr","npy"),result["representations"]["pair"])
+                continue  # Skip the rest of the loop, which includes structure prediction
+
 
             if calc_extra_ptm and 'predicted_aligned_error' in result.keys():
                 extra_ptm_output = extra_ptm.get_chain_and_interface_metrics(result, input_features['asym_id'],
@@ -439,6 +449,7 @@ def predict_structure(
                 calc_extra_ptm = False
             prediction_times.append(time.time() - start)
 
+            
             ########################
             # parse results
             ########################
@@ -1639,6 +1650,7 @@ def run(
                     save_recycles=save_recycles,
                     calc_extra_ptm=calc_extra_ptm,
                     use_probs_extra=use_probs_extra,
+                    save_representations_only=save_representations_only,  # Pass the new argument
                 )
                 
                 result_files += results["result_files"]
