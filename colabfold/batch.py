@@ -1285,6 +1285,7 @@ def run(
     feature_dict_callback: Callable[[Any], Any] = None,
     calc_extra_ptm: bool = False,
     use_probs_extra: bool = True,
+    save_representations_only: bool = False,  # New argument
     **kwargs
 ):
     # check what device is available
@@ -1523,6 +1524,15 @@ def run(
         except Exception as e:
             logger.exception(f"Could not generate input features {jobname}: {e}")
             continue
+
+        # Save representations only if the flag is set
+        if save_representations_only:
+            result_files = []
+            if save_single_representations:
+                np.save(result_dir.joinpath(f"{jobname}_single_repr.npy"), feature_dict["representations"]["single"])
+            if save_pair_representations:
+                np.save(result_dir.joinpath(f"{jobname}_pair_repr.npy"), feature_dict["representations"]["pair"])
+            continue  # Skip the rest of the loop, which includes structure prediction
 
         ###############
         # save plots not requiring prediction
@@ -2126,11 +2136,13 @@ def main():
         local_pdb_path=args.local_pdb_path,
         use_cluster_profile=not args.disable_cluster_profile,
         use_gpu_relax = args.use_gpu_relax,
+        calc_extra_ptm=args.calc_extra_ptm,
         jobname_prefix=args.jobname_prefix,
         save_all=args.save_all,
         save_recycles=args.save_recycles,
         calc_extra_ptm=args.calc_extra_ptm,
         use_probs_extra=use_probs_extra,
+        save_representations_only=args.save_representations_only,  # Pass the new argument
     )
 
 if __name__ == "__main__":
