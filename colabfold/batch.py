@@ -1536,15 +1536,6 @@ def run(
             logger.exception(f"Could not generate input features {jobname}: {e}")
             continue
 
-        # Save representations only if the flag is set
-        if save_representations_only:
-            result_files = []
-            print(feature_dict, flush=True) 
-            if save_single_representations:
-                np.save(result_dir.joinpath(f"{jobname}_single_repr.npy"), feature_dict["representations"]["single"])
-            if save_pair_representations:
-                np.save(result_dir.joinpath(f"{jobname}_pair_repr.npy"), feature_dict["representations"]["pair"])
-            continue  # Skip the rest of the loop, which includes structure prediction
 
         ###############
         # save plots not requiring prediction
